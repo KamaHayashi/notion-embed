@@ -3,7 +3,7 @@ module.exports = {
   async headers() {
     return [
       {
-        source: "/(.*)", // apply to all routes
+        source: "/(.*)",
         headers: [
           {
             key: "X-Frame-Options",
@@ -18,3 +18,4 @@ module.exports = {
     ];
   }
 };
+
