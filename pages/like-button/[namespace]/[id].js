@@ -5,17 +5,15 @@ import { useEffect, useState } from "react";
 export default function Button() {
   const router = useRouter();
   const { namespace, id } = router.query;
-
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const match = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(match.matches);
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    setIsDark(media.matches);
 
     const listener = (e) => setIsDark(e.matches);
-    match.addEventListener("change", listener);
-
-    return () => match.removeEventListener("change", listener);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
   }, []);
 
   if (!namespace || !id) return null;
@@ -25,8 +23,8 @@ export default function Button() {
       apiKey={process.env.NEXT_PUBLIC_LYKET_API_KEY}
       theme={{
         colors: {
-          text: isDark ? "#ffffff" : "#333333",
-          icon: isDark ? "#ffffff" : "#333333",
+          icon: isDark ? "#ffffff" : "#222222",
+          text: isDark ? "#ffffff" : "#222222",
         },
         button: {
           background: "transparent",
