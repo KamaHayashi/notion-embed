@@ -5,36 +5,39 @@ import { useEffect, useState } from "react";
 export default function Button() {
   const router = useRouter();
   const { namespace, id } = router.query;
+
+  const [isClient, setIsClient] = useState(false);
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(media.matches);
-
-    const listener = (e) => setIsDark(e.matches);
-    media.addEventListener("change", listener);
-    return () => media.removeEventListener("change", listener);
+    setIsClient(true);
+    const match = window.matchMedia("(prefers-color-scheme: dark)");
+    setIsDark(match.matches);
+    match.addEventListener("change", e => setIsDark(e.matches));
+    return () => match.removeEventListener("change", () => {});
   }, []);
 
-  if (!namespace || !id) return null;
+  if (!isClient || !namespace || !id) return null;
 
   return (
     <LyketProvider
       apiKey={process.env.NEXT_PUBLIC_LYKET_API_KEY}
       theme={{
         colors: {
-          icon: isDark ? "#ffffff" : "#222222",
-          text: isDark ? "#ffffff" : "#222222",
+          icon: isDark ? "#ffffff" : "#000000",  // white in dark mode
+          text: isDark ? "#ffffff" : "#000000",  // white text
         },
         button: {
-          background: "transparent",
+          background: "transparent", // no background
           border: "none",
         },
       }}
     >
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "70px" }}>
-        <LikeButton namespace={namespace} id={id} component="icon" />
-      </div>
+      <LikeButton
+        namespace={namespace}
+        id={id}
+        component="icon"
+      />
     </LyketProvider>
   );
 }
